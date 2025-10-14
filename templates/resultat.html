@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultat de l'estimation - Logement étudiant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Flèche de retour -->
+    <div class="back-arrow" onclick="window.location.href='{{ url_for('choix_page') }}'">
+        ←
+    </div>
+
+    <div class="container">
+        <h1 class="logement">Résultat de votre estimation</h1>
+        
+        <div class="resultat-container">
+            <p class="description-resultat">Voici le loyer mensuel estimé pour votre sélection</p>
+            
+            <div class="loyer-estime">
+                <div class="loyer-titre">Loyer mensuel estimé</div>
+                <div class="loyer-montant" id="montantEstime">{{ prix }} DT</div>
+            </div>
+            
+            <p class="sous-titre">Basé sur les caractéristiques que vous avez fournies</p>
+            
+            <button class="btn-recommencer" onclick="window.location.href='{{ url_for('form_page') }}'">
+                Recommencer une estimation
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const montantElement = document.getElementById('montantEstime');
+            let prixText = montantElement.textContent;
+            
+            const prix = parseFloat(prixText);
+            if (!isNaN(prix)) {
+                montantElement.textContent = prix.toFixed(2) + ' DT';
+            }
+        });
+    </script>
+</body>
+</html>

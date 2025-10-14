@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aidez-nous - Logement étudiant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Flèche de retour -->
+    <div class="back-arrow" onclick="window.location.href='{{ url_for('choix_page') }}'">
+        ←
+    </div>
+
+    <div class="container">
+        <h1 class="logement">Aidez-nous en remplissant les informations demandées ci-dessous</h1>
+        
+        <form class="form-estimation">
+            <!-- Section Lieu -->
+            <div class="form-section">
+                <h2>Lieu</h2>
+                
+                <div class="form-group">
+                    <label for="lieu">Lieu (ville, quartier, adresse)</label>
+                    <input type="text" id="lieu" name="lieu" class="input-text" 
+                           placeholder="Ex: Slimen Kehya, Denden..." required>
+                    <div class="lieu-exemple">Exemples: Manouba, Slimen Kehya, Denden...</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nombre de chambres</label>
+                    <div class="number-input">
+                        <button type="button" class="btn-minus">-</button>
+                        <input type="number" id="nbChambres" name="nbChambres" value="1" min="1" max="5">
+                        <button type="button" class="btn-plus">+</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Type de chambre</label>
+                    <select id="typeChambre" name="typeChambre">
+                        <option value="individuelle">Individuelle</option>
+                        <option value="double">Double</option>
+                        <option value="triple">Triple</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Options -->
+            <div class="form-section">
+                <h2>Options</h2>
+                <div class="form-group">
+                    <label for="myGenre">Votre genre</label>
+                    <select id="myGenre" name="myGenre" class="select-option" required>
+                        <option value="F">Femme</option>
+                        <option value="M">Homme</option>
+                    </select>
+                    <div class="lieu-exemple">Pour enregistrer votre logement</div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="wifi" name="wifi" checked>
+                        <span class="checkmark"></span>
+                        Wi-Fi inclus
+                    </label>
+                    
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="electricite" name="electricite" checked>
+                        <span class="checkmark"></span>
+                        Électricité inclus
+                    </label>
+                    
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="eau" name="eau" checked>
+                        <span class="checkmark"></span>
+                        Eau inclus
+                    </label>
+                </div>
+            </div>
+
+            <!-- Section Montant -->
+            <div class="form-section">
+                <h2>Montant de la part</h2>
+                <div class="form-group">
+                    <label for="montant">Montant (DT)</label>
+                    <input type="number" id="montant" name="montant" class="input-text" 
+                           placeholder="Ex: 500" min="0" step="10" required>
+                    <div class="lieu-exemple">Exemple: 500 DT</div>
+                </div>
+            </div>
+            
+            <div class="separator"></div>
+
+            <!-- Bouton de soumission -->
+            <button type="submit" class="btn-predire">
+                Soumettre
+            </button>
+
+            <!-- ZONE DE RÉSULTAT -->
+            <div id="resultat-message" style="margin-top: 20px;"></div>
+        </form>
+    </div>
+
+    <script>
+        // Gestion du formulaire "Aidez-nous"
+        document.querySelector('.form-estimation').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                lieu: formData.get('lieu'),
+                nbChambres: parseInt(formData.get('nbChambres')),
+                typeChambre: formData.get('typeChambre'),
+                wifi: formData.get('wifi') === 'on',
+                electricite: formData.get('electricite') === 'on',
+                eau: formData.get('eau') === 'on',
+                myGenre: formData.get('myGenre'),
+                montant: parseFloat(formData.get('montant'))
+            };
+            
+            console.log("Données envoyées:", data);
+            
+            // Afficher un indicateur de chargement
+            const resultDiv = document.getElementById('resultat-message');
+            resultDiv.innerHTML = '<div style="text-align: center; padding: 15px; background: #fff3cd; color: #856404; border-radius: 8px; border: 1px solid #ffeaa7;">⏳ Envoi en cours...</div>';
+            
+            fetch('/add-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; border: 1px solid #c3e6cb; text-align: center; font-weight: bold;">
+                            ${result.message}
+                        </div>
+                    `;
+                    // Vider le formulaire après succès
+                    this.reset();
+                } else {
+                    resultDiv.innerHTML = `
+                        <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb; text-align: center; font-weight: bold;">
+                            Erreur: ${result.error}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `
+                    <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb; text-align: center; font-weight: bold;">
+                        Erreur de connexion au serveur
+                    </div>
+                `;
+            });
+        });
+
+        // Gestion des boutons +/-
+        document.querySelectorAll('.btn-plus').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('input[type=number]');
+                input.stepUp();
+            });
+        });
+
+        document.querySelectorAll('.btn-minus').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('input[type=number]');
+                input.stepDown();
+            });
+        });
+    </script>
+</body>
+</html>

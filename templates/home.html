@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouvez votre logement</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo">
+            <button class="commencer" onclick="window.location.href='{{ url_for('choix_page') }}'">Commencer</button>
+        </header>
+
+        
+        <main>
+            <div class="logement">
+                <h1>Trouvez Votre Logement</h1>
+                <h1>Étudiant Idéal</h1>
+                <h1>à Manouba</h1>
+            </div>
+            
+            <div class="content">
+                <br>
+                <p class="description">
+                    Estimez le prix d'un logement étudiant selon vos critères.
+                </p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

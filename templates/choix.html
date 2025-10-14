@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisissez votre action</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="back-arrow" onclick="window.location.href='{{ url_for('home') }}'">
+        ←
+    </div>
+
+    <div class="container">
+        <h1 class="logement">Que souhaitez-vous faire ?</h1>
+        
+        <div class="choix-container">
+            <!-- Option 1 : Chercher un logement -->
+            <div class="option-card" onclick="window.location.href='{{ url_for('form_page') }}'">
+                <h2>Chercher un logement</h2>
+                <p>Estimer le prix d'un logement étudiant selon vos critères</p>
+                <div class="option-arrow">→</div>
+            </div>
+
+            <!-- Option 2 : Aider avec des données -->
+            <div class="option-card" onclick="window.location.href='{{ url_for('aide') }}'">
+                <h2>Nous aider</h2>
+                <p>Partagez vos données pour améliorer notre système</p>
+                <div class="option-arrow">→</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
