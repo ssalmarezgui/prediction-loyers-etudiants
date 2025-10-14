@@ -1,0 +1,9 @@
+# Environnements virtuels
+venv/
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+
+# Autres fichiers temporaires
+*.log
